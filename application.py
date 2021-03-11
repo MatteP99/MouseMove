@@ -7,6 +7,22 @@ import gui
 
 
 class Application():
+    """
+    A class used to represent an hotkeys management application.
+
+    ...
+
+    Attributes
+    ----------
+    monitors : list of tuples of int
+        the monitors parameters needed to the application
+    hotkeys: list of strings
+        the hotkeys used by the application
+    root: tkinter.Tk
+        the base of the GUI
+    frame: tkinter.Frame
+        the frame showed by the application
+    """
 
     def __init__(self, parent):
         self.monitors = [(m.x, m.y, m.width, m.height) for m in screeninfo.get_monitors()]
@@ -21,6 +37,10 @@ class Application():
         self.initHotkeys()
 
     def initHotkeys(self):
+    """
+    Set hotkeys for each monitor and to use the application.
+    """
+
         for n, monitor in enumerate(self.monitors):
             hotkey = f'{self.hotkeys[n][0]}'
             x = monitor[2] / 2 + monitor[0]
@@ -30,16 +50,28 @@ class Application():
         keyboard.add_hotkey('alt+shift+0', self.root.destroy)
 
     def show(self):
+    """
+    Shows the configuration window.
+    """
+
         self.root.deiconify()
         self.root.update()
 
     def restart(self):
+    """
+    Hides the configuration window and re-intialize the hotkeys.
+    """
+
         apputils.readHotkeys(self.hotkeys)
         keyboard.unhook_all_hotkeys()
         self.initHotkeys()
         self.root.withdraw()
 
     def save(self):
+    """
+    Save the hotkeys configuration in a csv file.
+    """
+
         self.hotkeys[self.frame.prevCombo][0] = self.frame.hotkeyEntry.get()
         apputils.writeHotkeys(self.hotkeys)
         self.restart()
