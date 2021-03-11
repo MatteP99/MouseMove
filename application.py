@@ -1,39 +1,50 @@
+import pyautogui as pag
 import tkinter as tk
-import csv, os
+import screeninfo
+import keyboard
+import apputils
+import gui
 
-class Application(tk.Frame):
-    def __init__(self, monitors, hotkeys, master=None):
-        super().__init__(master)
-        self.monitors = monitors
-        self.hotkeys = hotkeys
-        self.grid(padx=5, pady=5)
-        self.createWidgets()
 
-    def createWidgets(self):
-        vals = [f"Monitor {n+1}" for n, monitor in enumerate(self.monitors)]
-        self.monitorsCombo = tk.ttk.Combobox(self, values = vals, state="readonly")
-        self.monitorsCombo.grid(row = 0, column = 0, padx=5, pady=5)        
-        self.monitorsCombo.bind("<<ComboboxSelected>>", self.callback)
-        self.monitorsCombo.current(0)
-        self.prevCombo = self.monitorsCombo.current()
-        self.hotkeyEntry = tk.Entry(self)
-        self.hotkeyEntry.grid(row = 0, column = 1, padx=5, pady=5)
-        self.hotkeyEntry.insert(0, f'{self.hotkeys[self.monitorsCombo.current()][0]}')
-        self.saveButton = tk.Button(self, text='Save', command=self.save)
-        self.saveButton.grid(row = 1, column = 1, padx=5, pady=5)
-        self.quitButton = tk.Button(self, text='Quit', command=self.quit)
-        self.quitButton.grid(row = 1, column = 0, padx=5, pady=5)
-    
-    def callback(self, arg):
-        self.hotkeys[self.prevCombo][0] = self.hotkeyEntry.get()
-        self.hotkeyEntry.delete(0, tk.END)
-        self.hotkeyEntry.insert(0, f'{self.hotkeys[self.monitorsCombo.current()][0]}')
-        self.prevCombo = self.monitorsCombo.current()
+class Application():
+
+    def __init__(self, parent):
+        self.monitors = [(m.x, m.y, m.width, m.height) for m in screeninfo.get_monitors()]
+        self.hotkeys = []
+        apputils.readHotkeys(self.hotkeys)
+        self.root = parent
+        self.root.title('MouseMove')
+        self.frame = gui.guiFrame(self.monitors, self.hotkeys, self, parent)
+        self.frame.grid(padx=5, pady=5)
+        self.root.withdraw()
+        self.frame.createWidgets()
+        self.initHotkeys()
+
+    def initHotkeys(self):
+        for n, monitor in enumerate(self.monitors):
+            hotkey = f'{self.hotkeys[n][0]}'
+            x = monitor[2] / 2 + monitor[0]
+            y = monitor[3] / 2 + monitor[1]
+            keyboard.add_hotkey(hotkey, pag.moveTo, args=(x, y))
+        keyboard.add_hotkey('alt+shift+s', self.show)
+        keyboard.add_hotkey('alt+shift+0', self.root.destroy)
+
+    def show(self):
+        self.root.deiconify()
+        self.root.update()
+
+    def restart(self):
+        apputils.readHotkeys(self.hotkeys)
+        keyboard.unhook_all_hotkeys()
+        self.initHotkeys()
+        self.root.withdraw()
 
     def save(self):
-        self.hotkeys[self.prevCombo][0] = self.hotkeyEntry.get()
-        with open('res' + os.path.sep + 'hotkeys.csv', 'w', newline='') as csvfile:
-            writer = csv.writer(csvfile)
-            for n, _ in enumerate(self.monitors):
-                writer.writerow([f'{self.hotkeys[n][0]}'])
-    
+        self.hotkeys[self.frame.prevCombo][0] = self.frame.hotkeyEntry.get()
+        apputils.writeHotkeys(self.hotkeys)
+        self.restart()
+
+
+root = tk.Tk()
+Application(root)
+root.mainloop()
