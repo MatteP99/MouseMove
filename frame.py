@@ -28,5 +28,5 @@ class guiFrame(tk.Frame):
     def callback(self, arg):
         self.hotkeys[self.prevCombo][0] = self.hotkeyEntry.get()
         self.hotkeyEntry.delete(0, tk.END)
-        self.hotkeyEntry.insert(0, f'{self.master.hotkeys[self.monitorsCombo.current()][0]}')
+        self.hotkeyEntry.insert(0, f'{self.hotkeys[self.monitorsCombo.current()][0]}')
         self.prevCombo = self.monitorsCombo.current()
