@@ -1,5 +1,6 @@
 import csv
 import os
+import screeninfo
 
 folder = 'res' + os.path.sep
 
@@ -8,11 +9,18 @@ def readHotkeys(hotkeys):
     """
     Read the hotkeys from the hotkeys.csv file.
     """
-
-    with open(folder + 'hotkeys.csv', newline='') as csvfile:
-        reader = csv.reader(csvfile)
-        for row in reader:
-            hotkeys.append(row)
+    
+    if os.path.exists(folder + 'hotkeys.csv'):
+        with open(folder + 'hotkeys.csv', newline='') as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                hotkeys.append(row)
+            print(hotkeys)
+    else:
+        os.mkdir('res')
+        for n, _ in enumerate(screeninfo.get_monitors()):
+            hotkeys.append([f'alt+shift+{n+1}'])
+        print(hotkeys)
 
 
 def writeHotkeys(hotkeys):
