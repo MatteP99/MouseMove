@@ -25,7 +25,9 @@ class Application():
     """
 
     def __init__(self, parent):
-        self.monitors = [(m.x, m.y, m.width, m.height) for m in screeninfo.get_monitors()]
+        self.monitors = [
+            (m.x, m.y, m.width, m.height) for m in screeninfo.get_monitors()
+        ]
         self.hotkeys = []
         apputils.readHotkeys(self.hotkeys)
         self.root = parent
@@ -33,10 +35,9 @@ class Application():
         self.frame = frame.guiFrame(self.monitors, self.hotkeys, self, parent)
         self.frame.grid(padx=5, pady=5)
         self.root.withdraw()
-        self.frame.createWidgets()
-        self.initHotkeys()
+        self._initHotkeys()
 
-    def initHotkeys(self):
+    def _initHotkeys(self):
         """
         Set hotkeys for each monitor and to use the application.
         """
@@ -57,24 +58,24 @@ class Application():
         self.root.deiconify()
         self.root.update()
 
-    def restart(self):
+    def _restart(self):
         """
         Hides the configuration window and re-intialize the hotkeys.
         """
 
         apputils.readHotkeys(self.hotkeys)
         keyboard.unhook_all_hotkeys()
-        self.initHotkeys()
+        self._initHotkeys()
         self.root.withdraw()
 
-    def save(self):
+    def _save(self):
         """
         Save the hotkeys configuration in a csv file.
         """
 
         self.hotkeys[self.frame.prevCombo][0] = self.frame.hotkeyEntry.get()
         apputils.writeHotkeys(self.hotkeys)
-        self.restart()
+        self._restart()
 
 
 root = tk.Tk()
