@@ -11,8 +11,8 @@ def readHotkeys(hotkeys):
             hotkeys.append(row)
 
 
-def writeHotkeys(hotkeys):
+def writeHotkeys(hotkeys, monitors):
     with open(folder + 'hotkeys.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
-        for n, _ in enumerate(hotkeys):
+        for n, _ in enumerate(monitors):
             writer.writerow([f'{hotkeys[n][0]}'])

@@ -73,7 +73,7 @@ class Application():
         """
 
         self.hotkeys[self.frame.prevCombo][0] = self.frame.hotkeyEntry.get()
-        apputils.writeHotkeys(self.hotkeys)
+        apputils.writeHotkeys(self.hotkeys, self.monitors)
         self.restart()
 
 
