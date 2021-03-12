@@ -48,7 +48,7 @@ class Application():
             y = monitor[3] / 2 + monitor[1]
             keyboard.add_hotkey(hotkey, pag.moveTo, args=(x, y))
         keyboard.add_hotkey('alt+shift+s', self.show)
-        keyboard.add_hotkey('alt+shift+0', self.root.destroy)
+        keyboard.add_hotkey('alt+shift+e', self.root.destroy)
 
     def show(self):
         """
