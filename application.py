@@ -62,7 +62,8 @@ class Application():
         """
         Hides the configuration window and re-intialize the hotkeys.
         """
-
+        
+        self.hotkeys.clear()
         apputils.readHotkeys(self.hotkeys)
         keyboard.unhook_all_hotkeys()
         self._initHotkeys()
@@ -74,7 +75,7 @@ class Application():
         """
 
         self.hotkeys[self.frame.prevCombo][0] = self.frame.hotkeyEntry.get()
-        apputils.writeHotkeys(self.hotkeys, self.monitors)
+        apputils.writeHotkeys(self.hotkeys)
         self._restart()
 
 
