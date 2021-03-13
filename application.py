@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import pyautogui as pag
 import tkinter as tk
 import screeninfo
