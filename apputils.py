@@ -17,9 +17,10 @@ def readHotkeys(hotkeys):
             for row in reader:
                 hotkeys.append(row)
     else:
-        os.mkdir('res')
+        if not os.path.exists('res'):
+            os.mkdir('res')
         for n, _ in enumerate(screeninfo.get_monitors()):
-            hotkeys.append([f'alt+shift+{n+1}'])
+            hotkeys.append(('alt','shift',f'{n+1}'))
 
 
 def writeHotkeys(hotkeys):
@@ -29,4 +30,4 @@ def writeHotkeys(hotkeys):
     with open(folder + 'hotkeys.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         for n, _ in enumerate(hotkeys):
-            writer.writerow([f'{hotkeys[n][0]}'])
+            writer.writerow(hotkeys[n])
