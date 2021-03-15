@@ -51,7 +51,7 @@ class Application():
         """
         Default callback to move the mouse.
         """
-    
+
         pag.moveTo(args[0][0], args[0][1])
 
     def _init_hotkeys(self):
@@ -77,7 +77,7 @@ class Application():
         """
         Hides the configuration window and re-intialize the hotkeys.
         """
-        
+
         for hotkey in self._prev_hotkeys:
             self.hkp.unregister(hotkey)
         self._hotkeys = apputils.readHotkeys()
@@ -113,3 +113,4 @@ class Application():
 root = tk.Tk()
 Application(root)
 root.mainloop()
+
