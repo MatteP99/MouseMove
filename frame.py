@@ -29,7 +29,7 @@ class guiFrame(tk.Frame):
         """
    
         hotkeys = self.parent.getHotkeys()
-        vals = [f"Monitor {n+1}" for n, monitor in enumerate(self.monitors)]
+        vals = [f"Monitor {n}" for n, monitor in enumerate(self.monitors, 1)]
         self.monitorsCombo = tk.ttk.Combobox(
             self, values=vals, state="readonly")
         self.monitorsCombo.grid(row=0, column=0, padx=5, pady=5)
