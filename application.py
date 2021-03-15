@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 
+import os
 import keyboard
-import pyautogui as pag
+try:
+    import pyautogui as pag
+except:
+    os.system("xhost +SI:localuser:root")
+    import pyautogui as pag
 import tkinter as tk
 import apputils
 import frame
-import os
 
 
 class Application:
