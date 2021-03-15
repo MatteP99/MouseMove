@@ -28,7 +28,7 @@ class guiFrame(tk.Frame):
         Creates the necessary widgets for the gui.
         """
    
-        hotkeys = self.parent.getHotkeys()
+        hotkeys = self.parent.get_hotkeys()
         vals = [f"Monitor {n}" for n, monitor in enumerate(self.monitors, 1)]
         self.monitorsCombo = tk.ttk.Combobox(
             self, values=vals, state="readonly")
@@ -41,7 +41,7 @@ class guiFrame(tk.Frame):
         self.hotkeyEntry.insert(
             0, '+'.join(str(i) for i in hotkeys[0]))
         self.saveButton = tk.Button(
-            self, text='Save and quit', command=self.parent._save)
+            self, text='Save and quit', command=self.parent.save)
         self.saveButton.grid(row=1, column=0, padx=5, pady=5, columnspan=2)
 
     def _callback(self, arg):
@@ -49,9 +49,9 @@ class guiFrame(tk.Frame):
         The callback used to track the changes to the combobox.
         """
         
-        hotkeys = self.parent.getHotkeys()
+        hotkeys = self.parent.get_hotkeys()
         hotkeys[self.prevCombo] = (self.hotkeyEntry.get().split('+'))
-        self.parent.setHotkeys(hotkeys) 
+        self.parent.set_hotkeys(hotkeys)
         self.hotkeyEntry.delete(0, tk.END)
         self.hotkeyEntry.insert(
             0, '+'.join(str(i) 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from system_hotkey import SystemHotkey
+import system_hotkey as sh
 import pyautogui as pag
 import tkinter as tk
 import screeninfo
@@ -33,10 +33,10 @@ class Application():
         self.monitors = [
             (m.x, m.y, m.width, m.height) for m in screeninfo.get_monitors()
         ]
-        self.__hotkeys = apputils.readHotkeys()
-        self.hk = SystemHotkey()
-        self.hkp = SystemHotkey(consumer=self.moveMouse)
-        self.__prev_hotkeys = self.__hotkeys.copy()
+        self._hotkeys = apputils.readHotkeys()
+        self.hk = sh.SystemHotkey()
+        self.hkp = sh.SystemHotkey(consumer=self.move_mouse)
+        self._prev_hotkeys = self._hotkeys.copy()
         self.root = parent
         self.root.title('MouseMove')
         self.frame = frame.guiFrame(self.monitors, self, parent)
@@ -45,22 +45,22 @@ class Application():
         self.hk.register(('alt', 'shift', 's'), callback=lambda _: self.show())
         self.hk.register(
             ('alt', 'shift', 'e'), callback=lambda _: self.root.destroy())
-        self._initHotkeys()
+        self._init_hotkeys()
 
-    def moveMouse(self, event, hotkey, args):
+    def move_mouse(self, event, hotkey, args):
         """
         Default callback to move the mouse.
         """
     
         pag.moveTo(args[0][0], args[0][1])
 
-    def _initHotkeys(self):
+    def _init_hotkeys(self):
         """
         Set hotkeys for each monitor and to use the application.
         """
 
         for n, monitor in enumerate(self.monitors):
-            hotkey = self.__hotkeys[n]
+            hotkey = self._hotkeys[n]
             x = monitor[2] / 2 + monitor[0]
             y = monitor[3] / 2 + monitor[1]
             self.hkp.register(hotkey, x, y)
@@ -78,36 +78,36 @@ class Application():
         Hides the configuration window and re-intialize the hotkeys.
         """
         
-        for hotkey in self.__prev_hotkeys:
+        for hotkey in self._prev_hotkeys:
             self.hkp.unregister(hotkey)
-        self.__hotkeys = apputils.readHotkeys()
-        self.__prev_hotkeys = self.__hotkeys.copy()
-        self._initHotkeys()
+        self._hotkeys = apputils.readHotkeys()
+        self._prev_hotkeys = self._hotkeys.copy()
+        self._init_hotkeys()
         self.root.withdraw()
 
-    def _save(self):
+    def save(self):
         """
         Save the hotkeys configuration in a csv file.
         """
 
-        self.__hotkeys[self.frame.prevCombo] = \
+        self._hotkeys[self.frame.prevCombo] = \
             (self.frame.hotkeyEntry.get().split('+'))
-        apputils.writeHotkeys(self.__hotkeys)
+        apputils.writeHotkeys(self._hotkeys)
         self._restart()
 
-    def getHotkeys(self):
+    def get_hotkeys(self):
         """
         Returns the hotkeys.
         """
 
-        return self.__hotkeys
+        return self._hotkeys
 
-    def setHotkeys(self, hotkeys):
+    def set_hotkeys(self, hotkeys):
         """
         Sets the hotkeys.
         """
 
-        self.__hotkeys = hotkeys
+        self._hotkeys = hotkeys
 
 
 root = tk.Tk()

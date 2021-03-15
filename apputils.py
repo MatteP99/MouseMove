@@ -19,7 +19,7 @@ def readHotkeys():
         if not os.path.exists('res'):
             os.mkdir('res')
         return [
-            ('alt','shift',f'{n}') 
+            ('alt','shift',f'{n}')
             for n, _ in enumerate(screeninfo.get_monitors(), 1)
         ]
 
