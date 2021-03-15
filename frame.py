@@ -1,7 +1,10 @@
 import tkinter as tk
+import keyboard
+
+import apputils
 
 
-class guiFrame(tk.Frame):
+class GuiFrame(tk.Frame):
     """
     A class used to represent the gui of the application.
 
@@ -9,52 +12,58 @@ class guiFrame(tk.Frame):
 
     Attributes
     ----------
-    monitors : list of tuples of int
-        the monitors parameters needed to the application
-    hotkeys: list of tuples
-        the hotkeys used by the application
     parent: Application
         the application that contain this frame
     """
 
-    def __init__(self, monitors, parent, master=None):
+    def __init__(self, parent, master=None):
         super().__init__(master)
-        self.monitors = monitors
         self.parent = parent
-        self._createWidgets()
+        self._create_widgets()
 
-    def _createWidgets(self):
+    def _create_widgets(self):
         """
         Creates the necessary widgets for the gui.
         """
 
         hotkeys = self.parent.get_hotkeys()
-        vals = [f"Monitor {n}" for n, monitor in enumerate(self.monitors, 1)]
-        self.monitorsCombo = tk.ttk.Combobox(
-            self, values=vals, state="readonly")
-        self.monitorsCombo.grid(row=0, column=0, padx=5, pady=5)
-        self.monitorsCombo.bind("<<ComboboxSelected>>", self._callback)
-        self.monitorsCombo.current(0)
-        self.prevCombo = self.monitorsCombo.current()
-        self.hotkeyEntry = tk.Entry(self)
-        self.hotkeyEntry.grid(row=0, column=1, padx=5, pady=5)
-        self.hotkeyEntry.insert(
-            0, '+'.join(str(i) for i in hotkeys[0]))
-        self.saveButton = tk.Button(
+        values = [
+            f"Monitor {n}" for n, monitor in enumerate(apputils.monitors, 1)
+        ]
+        self._monitorsCombo = tk.ttk.Combobox(
+            self, values=values, state="readonly", width=10)
+        self._monitorsCombo.grid(row=0, column=0, padx=5, pady=5)
+        self._monitorsCombo.bind("<<ComboboxSelected>>", self._callback)
+        self._monitorsCombo.current(0)
+        self.prevCombo = self._monitorsCombo.current()
+        self._label = tk.Label(self, text='+'.join(str(i) for i in hotkeys[0]))
+        self._label.grid(row=0, column=1, padx=5, pady=5)
+        self._read_hotkey_button = tk.Button(
+            self, text='Register hotkey', command=self._read_hotkey)
+        self._read_hotkey_button.grid(row=0, column=2, padx=5, pady=5, )
+        self._saveButton = tk.Button(
             self, text='Save and quit', command=self.parent.save)
-        self.saveButton.grid(row=1, column=0, padx=5, pady=5, columnspan=2)
+        self._saveButton.grid(row=1, column=0, padx=5, pady=5, columnspan=3)
 
-    def _callback(self, arg):
+    def _callback(self, args):
         """
         The callback used to track the changes to the combobox.
         """
 
         hotkeys = self.parent.get_hotkeys()
-        hotkeys[self.prevCombo] = (self.hotkeyEntry.get().split('+'))
-        self.parent.set_hotkeys(hotkeys)
-        self.hotkeyEntry.delete(0, tk.END)
-        self.hotkeyEntry.insert(
-            0,
-            '+'.join(str(i) for i in hotkeys[self.monitorsCombo.current()]))
-        self.prevCombo = self.monitorsCombo.current()
+        self._label.config(
+            text=str('+'.join(
+                str(i) for i in hotkeys[self._monitorsCombo.current()])))
 
+    def _read_hotkey(self):
+        """
+        Callback used to get the hotkey pressed by the user.
+        """
+
+        hotkeys = self.parent.get_hotkeys()
+        hotkeys[self._monitorsCombo.current()] = \
+            keyboard.read_hotkey(suppress=False).split("+")
+        self._label.config(
+            text=str('+'.join(
+                str(i) for i in hotkeys[self._monitorsCombo.current()])))
+        self.parent.set_hotkeys(hotkeys)
