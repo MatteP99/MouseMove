@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import sys
 import keyboard
 try:
     import pyautogui as pag
@@ -92,7 +93,7 @@ class Application:
 
 
 if os.path.sep == '/' and os.geteuid() != 0:
-    exit(
+    sys.exit(
         """
         You need to have root privileges to run this script.
         Please try again, this time using 'sudo'. Exiting.
