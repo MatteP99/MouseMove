@@ -1,4 +1,0 @@
-screeninfo
-pyautogui
-system_hotkey
-pywin32

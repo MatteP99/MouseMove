@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
-import system_hotkey as sh
+import keyboard
 import pyautogui as pag
 import tkinter as tk
 import screeninfo
 import apputils
 import frame
 import sys
+import os
 
 
 class Application():
@@ -21,8 +22,6 @@ class Application():
         the monitors parameters needed to the application
     hotkeys: list of tuples
         the hotkeys used by the application
-    prev_hotkeys: list of tuples
-        used to unbind the previous hotkeys
     root: tkinter.Tk
         the base of the GUI
     frame: tkinter.Frame
@@ -34,25 +33,12 @@ class Application():
             (m.x, m.y, m.width, m.height) for m in screeninfo.get_monitors()
         ]
         self._hotkeys = apputils.readHotkeys()
-        self.hk = sh.SystemHotkey()
-        self.hkp = sh.SystemHotkey(consumer=self.move_mouse)
-        self._prev_hotkeys = self._hotkeys.copy()
         self.root = parent
         self.root.title('MouseMove')
         self.frame = frame.guiFrame(self.monitors, self, parent)
         self.frame.grid(padx=5, pady=5)
         self.root.withdraw()
-        self.hk.register(('alt', 'shift', 's'), callback=lambda _: self.show())
-        self.hk.register(
-            ('alt', 'shift', 'e'), callback=lambda _: self.root.destroy())
         self._init_hotkeys()
-
-    def move_mouse(self, event, hotkey, args):
-        """
-        Default callback to move the mouse.
-        """
-
-        pag.moveTo(args[0][0], args[0][1])
 
     def _init_hotkeys(self):
         """
@@ -60,10 +46,12 @@ class Application():
         """
 
         for n, monitor in enumerate(self.monitors):
-            hotkey = self._hotkeys[n]
+            hotkey = '+'.join(str(i) for i in self._hotkeys[n])
             x = monitor[2] / 2 + monitor[0]
             y = monitor[3] / 2 + monitor[1]
-            self.hkp.register(hotkey, x, y)
+            keyboard.add_hotkey(hotkey, pag.moveTo, args=(x, y))
+        keyboard.add_hotkey('alt+shift+s', self.show)
+        keyboard.add_hotkey('alt+shift+e', self.root.destroy)
 
     def show(self):
         """
@@ -78,10 +66,8 @@ class Application():
         Hides the configuration window and re-intialize the hotkeys.
         """
 
-        for hotkey in self._prev_hotkeys:
-            self.hkp.unregister(hotkey)
         self._hotkeys = apputils.readHotkeys()
-        self._prev_hotkeys = self._hotkeys.copy()
+        keyboard.unhook_all_hotkeys()
         self._init_hotkeys()
         self.root.withdraw()
 
@@ -110,6 +96,12 @@ class Application():
         self._hotkeys = hotkeys
 
 
+if os.path.sep == '/' and os.geteuid() != 0:
+    exit(
+    """
+    You need to have root privileges to run this script.
+    Please try again, this time using 'sudo'. Exiting.
+    """)
 root = tk.Tk()
 Application(root)
 root.mainloop()
