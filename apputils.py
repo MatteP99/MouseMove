@@ -5,7 +5,7 @@ import screeninfo
 folder = 'res' + os.path.sep
 
 
-def readHotkeys(hotkeys):
+def readHotkeys():
     """
     Read the hotkeys from the hotkeys.csv file.
     If it does not exists, set standard hotkeys.
@@ -14,13 +14,14 @@ def readHotkeys(hotkeys):
     if os.path.exists(folder + 'hotkeys.csv'):
         with open(folder + 'hotkeys.csv', newline='') as csvfile:
             reader = csv.reader(csvfile)
-            for row in reader:
-                hotkeys.append(row)
+            return [row for row in reader]
     else:
         if not os.path.exists('res'):
             os.mkdir('res')
-        for n, _ in enumerate(screeninfo.get_monitors()):
-            hotkeys.append(('alt','shift',f'{n+1}'))
+        return [
+            ('alt','shift',f'{n+1}') 
+            for n, _ in enumerate(screeninfo.get_monitors())
+        ]
 
 
 def writeHotkeys(hotkeys):

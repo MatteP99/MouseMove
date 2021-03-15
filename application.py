@@ -33,14 +33,13 @@ class Application():
         self.monitors = [
             (m.x, m.y, m.width, m.height) for m in screeninfo.get_monitors()
         ]
-        self.hotkeys = []
+        self.__hotkeys = apputils.readHotkeys()
         self.hk = SystemHotkey()
         self.hkp = SystemHotkey(consumer=self.moveMouse)
-        apputils.readHotkeys(self.hotkeys)
-        self.prev_hotkeys = self.hotkeys.copy()
+        self.__prev_hotkeys = self.__hotkeys.copy()
         self.root = parent
         self.root.title('MouseMove')
-        self.frame = frame.guiFrame(self.monitors, self.hotkeys, self, parent)
+        self.frame = frame.guiFrame(self.monitors, self, parent)
         self.frame.grid(padx=5, pady=5)
         self.root.withdraw()
         self.hk.register(('alt', 'shift', 's'), callback=lambda _: self.show())
@@ -61,7 +60,7 @@ class Application():
         """
 
         for n, monitor in enumerate(self.monitors):
-            hotkey = self.hotkeys[n]
+            hotkey = self.__hotkeys[n]
             x = monitor[2] / 2 + monitor[0]
             y = monitor[3] / 2 + monitor[1]
             self.hkp.register(hotkey, x, y)
@@ -79,11 +78,10 @@ class Application():
         Hides the configuration window and re-intialize the hotkeys.
         """
         
-        for hotkey in self.prev_hotkeys:
+        for hotkey in self.__prev_hotkeys:
             self.hkp.unregister(hotkey)
-        self.hotkeys.clear()
-        apputils.readHotkeys(self.hotkeys)
-        self.prev_hotkeys = self.hotkeys.copy()
+        self.__hotkeys = apputils.readHotkeys()
+        self.__prev_hotkeys = self.__hotkeys.copy()
         self._initHotkeys()
         self.root.withdraw()
 
@@ -92,9 +90,24 @@ class Application():
         Save the hotkeys configuration in a csv file.
         """
 
-        self.hotkeys[self.frame.prevCombo] = (self.frame.hotkeyEntry.get().split('+'))
-        apputils.writeHotkeys(self.hotkeys)
+        self.__hotkeys[self.frame.prevCombo] = \
+            (self.frame.hotkeyEntry.get().split('+'))
+        apputils.writeHotkeys(self.__hotkeys)
         self._restart()
+
+    def getHotkeys(self):
+        """
+        Returns the hotkeys.
+        """
+
+        return self.__hotkeys
+
+    def setHotkeys(self, hotkeys):
+        """
+        Sets the hotkeys.
+        """
+
+        self.__hotkeys = hotkeys
 
 
 root = tk.Tk()
