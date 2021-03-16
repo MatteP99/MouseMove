@@ -22,7 +22,7 @@ How it works:
 2. See [Releases][1]
 
 ### Actually tested in:
-- Linux
+- Linux (Ubuntu 20.04 and Debian 10 Buster)
 - Windows 10
 
 [1]:https://github.com/MatteP99/MouseMove/releases
