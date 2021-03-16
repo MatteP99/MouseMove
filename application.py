@@ -12,6 +12,7 @@ if 'DISPLAY' in os.environ:
         import pyautogui as pag
     except Xlib.error.DisplayConnectionError:
         os.system("xhost +SI:localuser:root")
+        import pyautogui as pag
 else:
     import pyautogui as pag
 
