@@ -2,15 +2,18 @@
 
 import os
 import sys
-import keyboard
-try:
-    import pyautogui as pag
-except:
-    os.system("xhost +SI:localuser:root")
-    import pyautogui as pag
 import tkinter as tk
 import apputils
 import frame
+import keyboard
+if 'DISPLAY' in os.environ:
+    import Xlib
+    try:
+        import pyautogui as pag
+    except Xlib.error.DisplayConnectionError:
+        os.system("xhost +SI:localuser:root")
+else:
+    import pyautogui as pag
 
 
 class Application:
