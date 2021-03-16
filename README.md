@@ -16,11 +16,13 @@ How it works:
 4. To apply the changes press **Save and quit** button
 
 ## Installation:
-- Launch application after cloning (with **sudo** in Linux)
-- See [Releases][1]
+1. From source code:
+    - Install dependencies with: `pip install -r requirements.txt`
+    - Run application.pyw (with **sudo** in Linux)
+2. See [Releases][1]
 
 ### Actually tested in:
-- Linux (run with sudo)
+- Linux
 - Windows 10
 
 [1]:https://github.com/MatteP99/MouseMove/releases
