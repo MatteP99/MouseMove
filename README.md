@@ -2,9 +2,9 @@
 Simple python script to move the mouse across the screens
 
 ## Default hotkeys:
-Alt+Shift+s to open the settings window  
-Alt+Shift+e to close the program  
-Alt+Shift+*MonitorNumber* to move the mouse in the center of the monitor *MonitorNumber*
+**Alt+Shift+s** to open the settings window  
+**Alt+Shift+e** to close the program  
+**Alt+Shift+*MonitorNumber*** to move the mouse in the center of the monitor *MonitorNumber*
 
 ## Settings window 
 ![Setting windows preview](images/settings_window.png)
