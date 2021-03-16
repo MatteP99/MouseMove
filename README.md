@@ -16,7 +16,7 @@ How it works:
 4. To apply the changes press **Save and quit** button
 
 ## Installation:
-- launch application after cloning
+- Launch application after cloning (with **sudo** in Linux)
 - See [Releases][1]
 
 ### Actually tested in:
