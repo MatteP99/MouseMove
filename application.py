@@ -6,7 +6,7 @@ import tkinter as tk
 import apputils
 import frame
 import keyboard
-if 'DISPLAY' in os.environ:
+if 'DISPLAY' in os.environ and os.environ['DISPLAY'][0] == ':':
     import Xlib
     try:
         import pyautogui as pag
