@@ -6,14 +6,11 @@ import tkinter as tk
 import apputils
 import frame
 import keyboard
-if 'DISPLAY' in os.environ and os.environ['DISPLAY'][0] == ':':
-    import Xlib
-    try:
-        import pyautogui as pag
-    except Xlib.error.DisplayConnectionError:
+try:
+    import pyautogui as pag
+except Exception as e:
+    if type(e).__name__ == 'DisplayConnectionError':
         os.system("xhost +SI:localuser:root")
-        import pyautogui as pag
-else:
     import pyautogui as pag
 
 
