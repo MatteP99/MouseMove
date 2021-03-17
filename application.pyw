@@ -90,8 +90,7 @@ class Application:
         Sets the hotkeys.
         """
 
-        if isinstance(hotkeys, list) and \
-                all(isinstance(hotkey, list) for hotkey in hotkeys):
+        if isinstance(hotkeys, list):
             self._hotkeys = hotkeys
         else:
             raise ValueError
