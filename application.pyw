@@ -7,6 +7,7 @@ import apputils
 import frame
 import keyboard
 import mouse
+import copy
 
 
 class Application:
@@ -19,17 +20,14 @@ class Application:
     ----------
     _hotkeys: list of tuples
         the hotkeys used by the application
-    _settings_hotkeys: list of tuples
-        the settings hotkeys used by the application
     _root: tkinter.Tk
         the base of the GUI
     _frame: tkinter.Frame
-        the frame showed by the application
+        the gui showed by the application
     """
 
     def __init__(self, parent):
         self._hotkeys = apputils.read_hotkeys()
-        self._settings_hotkeys = apputils.read_settings_hotkeys()
         self._root = parent
         self._root.title('MouseMove')
         self._frame = frame.GuiFrame(self, parent)
@@ -47,16 +45,18 @@ class Application:
             x = monitor[2] / 2 + monitor[0]
             y = monitor[3] / 2 + monitor[1]
             keyboard.add_hotkey(hotkey, mouse.move, args=(x, y))
+
         keyboard.add_hotkey(
-            '+'.join(i for i in self._settings_hotkeys[0]), self.show)
+            '+'.join(i for i in self._hotkeys[-2]), self.show)
         keyboard.add_hotkey(
-            '+'.join(i for i in self._settings_hotkeys[1]), self._root.destroy)
+            '+'.join(i for i in self._hotkeys[-1]), self._root.destroy)
 
     def show(self):
         """
-        Shows the configuration window.
+        Removes all the hotkeys and shows the configuration window.
         """
 
+        keyboard.unhook_all_hotkeys()
         self._frame.restart()
         self._root.deiconify()
         self._root.update()
@@ -67,8 +67,6 @@ class Application:
         """
 
         self._hotkeys = apputils.read_hotkeys()
-        self._settings_hotkeys = apputils.read_settings_hotkeys()
-        keyboard.unhook_all_hotkeys()
         self._init_hotkeys()
         self._root.withdraw()
 
@@ -77,7 +75,7 @@ class Application:
         Save the hotkeys configuration in a csv file.
         """
 
-        apputils.write_hotkeys(self._hotkeys, self._settings_hotkeys)
+        apputils.write_hotkeys(self._hotkeys)
         self._restart()
 
     def get_hotkeys(self):
@@ -85,28 +83,18 @@ class Application:
         Returns the hotkeys.
         """
 
-        return self._hotkeys
+        return copy.deepcopy(self._hotkeys)
 
     def set_hotkeys(self, hotkeys):
         """
         Sets the hotkeys.
         """
 
-        self._hotkeys = hotkeys
-
-    def get_settings_hotkeys(self):
-        """
-        Sets the hotkeys.
-        """
-
-        return self._settings_hotkeys
-
-    def set_settings_hotkeys(self, hotkeys):
-        """
-        Sets the hotkeys.
-        """
-
-        self._settings_hotkeys = hotkeys
+        if isinstance(hotkeys, list) and \
+                all(isinstance(hotkey, list) for hotkey in hotkeys):
+            self._hotkeys = hotkeys
+        else:
+            raise ValueError
 
 
 if os.path.sep == '/' and os.geteuid() != 0:

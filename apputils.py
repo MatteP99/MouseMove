@@ -19,33 +19,20 @@ def read_hotkeys():
     else:
         if not os.path.exists('res'):
             os.mkdir('res')
-        return [
+        hotkeys = [
             ('alt', 'shift', f'{n}')
             for n, _ in enumerate(screeninfo.get_monitors(), 1)
         ]
+        hotkeys.append(('alt', 'shift', 's'))
+        hotkeys.append(('alt', 'shift', 'e'))
+        return hotkeys
 
 
-def read_settings_hotkeys():
-    if os.path.exists(res_folder + 'settings_hotkeys.csv'):
-        with open(res_folder + 'settings_hotkeys.csv', newline='') as csvfile:
-            reader = csv.reader(csvfile)
-            return [row for row in reader]
-    else:
-        return [
-            ('alt', 'shift', 's'),
-            ('alt', 'shift', 'e')
-        ]
-
-
-def write_hotkeys(hotkeys, settings_hotkeys):
+def write_hotkeys(hotkeys):
     """
-    Write the hotkeys to the hotkeys.csv and settings_hotkeys.csv files.
+    Write the hotkeys to the hotkeys.csv file.
     """
     with open(res_folder + 'hotkeys.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         for n, _ in enumerate(hotkeys):
             writer.writerow(hotkeys[n])
-    with open(res_folder + 'settings_hotkeys.csv', 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        for n, _ in enumerate(settings_hotkeys):
-            writer.writerow(settings_hotkeys[n])
