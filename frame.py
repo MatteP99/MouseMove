@@ -1,6 +1,5 @@
 import tkinter as tk
 import keyboard
-
 import apputils
 
 
@@ -30,8 +29,10 @@ class GuiFrame(tk.Frame):
         values = [
             f"Monitor {n}" for n, monitor in enumerate(apputils.monitors, 1)
         ]
+        values.append("Open settings")
+        values.append("Quit program")
         self._monitorsCombo = tk.ttk.Combobox(
-            self, values=values, state="readonly", width=10)
+            self, values=values, state="readonly", width=13)
         self._monitorsCombo.grid(row=0, column=0, padx=5, pady=5)
         self._monitorsCombo.bind("<<ComboboxSelected>>", self._callback)
         self._monitorsCombo.current(0)
@@ -50,20 +51,42 @@ class GuiFrame(tk.Frame):
         The callback used to track the changes to the combobox.
         """
 
+        settings_hotkeys = self.parent.get_settings_hotkeys()
         hotkeys = self.parent.get_hotkeys()
-        self._label.config(
-            text=str('+'.join(
-                str(i) for i in hotkeys[self._monitorsCombo.current()])))
+        if self._monitorsCombo.current() < len(hotkeys):
+            self._label.config(
+                text=str('+'.join(
+                    i for i in hotkeys[self._monitorsCombo.current()])))
+        else:
+            self._label.config(
+                text='+'.join(
+                    i for i in settings_hotkeys[
+                        self._monitorsCombo.current() - len(hotkeys)
+                        ]
+                )
+            )
 
     def _read_hotkey(self):
         """
         Callback used to get the hotkey pressed by the user.
         """
 
+        settings_hotkeys = self.parent.get_settings_hotkeys()
         hotkeys = self.parent.get_hotkeys()
-        hotkeys[self._monitorsCombo.current()] = \
-            keyboard.read_hotkey(suppress=False).split("+")
+        if self._monitorsCombo.current() < len(hotkeys):
+            hotkeys[self._monitorsCombo.current()] = \
+                keyboard.read_hotkey(suppress=False).split("+")
+            self.parent.set_hotkeys(hotkeys)
+        else:
+            settings_hotkeys[self._monitorsCombo.current() - len(hotkeys)] = \
+                keyboard.read_hotkey(suppress=False).split("+")
+            self.parent.set_settings_hotkeys(settings_hotkeys)
+        values = hotkeys + settings_hotkeys
         self._label.config(
-            text=str('+'.join(
-                str(i) for i in hotkeys[self._monitorsCombo.current()])))
-        self.parent.set_hotkeys(hotkeys)
+            text='+'.join(i for i in values[self._monitorsCombo.current()]))
+
+    def restart(self):
+        hotkeys = self.parent.get_hotkeys()
+        self._monitorsCombo.current(0)
+        self._label.config(text='+'.join(i for i in hotkeys[0]))
+
