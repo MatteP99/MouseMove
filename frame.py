@@ -1,6 +1,7 @@
-import tkinter as tk
 import keyboard
 import apputils
+import tkinter as tk
+from tkinter import ttk
 
 
 class GuiFrame(tk.Frame):
@@ -31,7 +32,7 @@ class GuiFrame(tk.Frame):
         ]
         values.append("Open settings")
         values.append("Quit program")
-        self._monitorsCombo = tk.ttk.Combobox(
+        self._monitorsCombo = ttk.Combobox(
             self, values=values, state="readonly", width=13)
         self._monitorsCombo.grid(row=0, column=0, padx=5, pady=5)
         self._monitorsCombo.bind("<<ComboboxSelected>>", self._callback)
@@ -83,10 +84,11 @@ class GuiFrame(tk.Frame):
             self.parent.set_settings_hotkeys(settings_hotkeys)
         values = hotkeys + settings_hotkeys
         self._label.config(
-            text='+'.join(i for i in values[self._monitorsCombo.current()]))
+            text=keyboard.normalize_name(
+                '+'.join(i for i in values[self._monitorsCombo.current()])))
 
     def restart(self):
         hotkeys = self.parent.get_hotkeys()
         self._monitorsCombo.current(0)
-        self._label.config(text='+'.join(i for i in hotkeys[0]))
-
+        self._label.config(
+            text=keyboard.normalize_name('+'.join(i for i in hotkeys[0])))

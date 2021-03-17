@@ -6,12 +6,7 @@ import tkinter as tk
 import apputils
 import frame
 import keyboard
-try:
-    import pyautogui as pag
-except Exception as e:
-    if type(e).__name__ == 'DisplayConnectionError':
-        os.system("xhost +SI:localuser:root")
-    import pyautogui as pag
+import mouse
 
 
 class Application:
@@ -51,7 +46,7 @@ class Application:
             hotkey = '+'.join(i for i in self._hotkeys[n])
             x = monitor[2] / 2 + monitor[0]
             y = monitor[3] / 2 + monitor[1]
-            keyboard.add_hotkey(hotkey, pag.moveTo, args=(x, y))
+            keyboard.add_hotkey(hotkey, mouse.move, args=(x, y))
         keyboard.add_hotkey(
             '+'.join(i for i in self._settings_hotkeys[0]), self.show)
         keyboard.add_hotkey(

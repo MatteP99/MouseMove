@@ -1,3 +1,3 @@
 screeninfo
-pyautogui
 keyboard
+mouse
