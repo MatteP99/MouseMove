@@ -76,12 +76,16 @@ class GuiFrame(tk.Frame):
         Callback used to get the hotkey pressed by the user.
         """
 
+        # Needed to disable the window
+        self.grid_forget()
         hotkeys = self.master.get_hotkeys()
         hotkeys[self.__monitors_combo.current()] = \
             keyboard.read_hotkey(suppress=False).split("+")
         self.master.set_hotkeys(hotkeys)
         txt = self._hk_txt(hotkeys[self.__monitors_combo.current()])
         self.__label.config(text=txt)
+        # Re-enable the window
+        self.grid()
 
     def restart(self):
         """
