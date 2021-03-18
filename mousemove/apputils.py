@@ -17,8 +17,8 @@ def read_hotkeys():
             reader = csv.reader(csvfile)
             return [row for row in reader]
     else:
-        if not os.path.exists('../res'):
-            os.mkdir('../res')
+        if not os.path.exists('res'):
+            os.mkdir('res')
         hotkeys = [
             ('alt', 'shift', f'{n}')
             for n, _ in enumerate(screeninfo.get_monitors(), 1)
