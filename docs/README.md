@@ -19,7 +19,9 @@ How it works:
 - From source code:
     1. Clone the repository: `git clone https://github.com/MatteP99/MouseMove.git`
     2. Install dependencies with: `pip3 install -r requirements.txt` (with **sudo** in Linux)
-    3. Run main.pyw (with **sudo** in Linux)
+    3. Run main.pyw:
+        - `python main.pyw` (**Windows 10**)
+        - `sudo ./main.pyw` (**Linux**)
     4. **(Linux only)** If you get the error `ModuleNotFoundError: No module named 'tkinter'` install the package python3-tk
 - See [releases][1] for standalone versions
 
