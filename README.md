@@ -17,8 +17,9 @@ How it works:
 
 ## Installation:
 1. From source code:
-    - Install dependencies with: `pip3 install -r requirements.txt`
+    - Install dependencies with: `pip3 install -r requirements.txt` (with **sudo** in Linux)
     - Run main.pyw (with **sudo** in Linux)
+    - **(Linux only)** If you get the error `ModuleNotFoundError: No module named 'tkinter'` install the package python3-tk
 2. See [releases][1] for standalone versions
 
 ### Actually tested in:
