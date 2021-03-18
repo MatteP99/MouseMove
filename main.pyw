@@ -2,7 +2,7 @@
 
 import os
 import sys
-import application
+from mousemove import application
 
 if os.path.sep == '/' and os.geteuid() != 0:
     sys.exit(

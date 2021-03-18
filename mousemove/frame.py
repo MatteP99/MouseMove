@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import keyboard
-import apputils
+from mousemove import apputils
 
 
 class GuiFrame(tk.Frame):
