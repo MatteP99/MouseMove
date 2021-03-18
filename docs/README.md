@@ -10,7 +10,7 @@ Simple python script to move the mouse across the screens
 ![Settings window preview](images/settings_window.png)
 
 How it works:
-1. Select the monitor whose hotkey you want to change
+1. Select the hotkey you want to change
 2. Press the **Register hotkey** button
 3. Press the keys
 4. To apply the changes press the **Save and quit** button
