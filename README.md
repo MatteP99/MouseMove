@@ -18,7 +18,7 @@ How it works:
 ## Installation:
 1. From source code:
     - Install dependencies with: `pip3 install -r requirements.txt`
-    - Run application.pyw (with **sudo** in Linux)
+    - Run main.pyw (with **sudo** in Linux)
 2. See [releases][1] for standalone versions
 
 ### Actually tested in:

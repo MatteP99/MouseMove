@@ -1,7 +1,7 @@
-import keyboard
-import apputils
 import tkinter as tk
 from tkinter import ttk
+import keyboard
+import apputils
 
 
 class GuiFrame(tk.Frame):
@@ -12,59 +12,63 @@ class GuiFrame(tk.Frame):
 
     Attributes
     ----------
-    parent: Application
-        the application that contain this frame
+    __monitors_combo: ttk.Combobox
+         comboBox that contains the values of the monitors and the settings
+    __label: tk.Label
+        label displaying the hotkey for the current value of the combobox
+    __read_hotkey_button: tk.Button
+        button used to trigger the hotkey reading function
+    __save_button: tk.Button
+        button used to save and close the settings window
+
     """
 
-    def __init__(self, parent, master=None):
+    def __init__(self, master=None):
         super().__init__(master)
-        self.parent = parent
-        self._create_widgets()
+        self.__monitors_combo = ttk.Combobox(self, state="readonly", width=13)
+        self.__label = tk.Label(self)
+        self.__read_hotkey_button = tk.Button(
+            self, text='Register hotkey', command=self._read_hotkey)
+        self.__save_button = tk.Button(
+            self, text='Save and quit', command=self.master.save)
+        self._start_widgets()
 
     @staticmethod
-    def _hotkey_text(val):
+    def _hk_txt(hotkey_text):
         """
-        Returns the processed text to be displayed
-        """
-
-        return keyboard.normalize_name('+'.join(i for i in val))
-
-    def _create_widgets(self):
-        """
-        Creates the necessary widgets for the gui.
+        Returns the processed text for the hotkey to be displayed
         """
 
-        hotkeys = self.parent.get_hotkeys()
+        return keyboard.normalize_name('+'.join(i for i in hotkey_text))
+
+    def _start_widgets(self):
+        """
+        Sets the necessary widgets for the gui.
+        """
+
+        hotkeys = self.master.get_hotkeys()
         values = [
             f"Monitor {n}" for n, _ in enumerate(apputils.monitors, 1)
         ]
         values.append("Open settings")
         values.append("Quit program")
 
-        self.__monitorsCombo = ttk.Combobox(
-            self, values=values, state="readonly", width=13)
-        self.__monitorsCombo.grid(row=0, column=0, padx=5, pady=5)
-        self.__monitorsCombo.bind("<<ComboboxSelected>>", self._callback)
-        self.__monitorsCombo.current(0)
-
-        self.__label = tk.Label(self, text=self._hotkey_text(hotkeys[0]))
+        self.__monitors_combo.config(values=values)
+        self.__monitors_combo.grid(row=0, column=0, padx=5, pady=5)
+        self.__monitors_combo.bind("<<ComboboxSelected>>", self._callback)
+        self.__monitors_combo.current(0)
+        self.__label.config(text=self._hk_txt(hotkeys[0]))
         self.__label.grid(row=0, column=1, padx=5, pady=5)
-
-        self.__read_hotkey_button = tk.Button(
-            self, text='Register hotkey', command=self._read_hotkey)
         self.__read_hotkey_button.grid(row=0, column=2, padx=5, pady=5, )
-
-        self._saveButton = tk.Button(
-            self, text='Save and quit', command=self.parent.save)
-        self._saveButton.grid(row=1, column=0, padx=5, pady=5, columnspan=3)
+        self.__save_button.grid(row=1, column=0, padx=5, pady=5, columnspan=3)
 
     def _callback(self, args):
         """
         The callback used to track the changes to the combobox.
         """
 
-        hotkeys = self.parent.get_hotkeys()
-        txt = self._hotkey_text(hotkeys[self.__monitorsCombo.current()])
+        hotkeys = self.master.get_hotkeys()
+        txt = self._hk_txt(hotkeys[self.__monitors_combo.current()])
         self.__label.config(text=txt)
 
     def _read_hotkey(self):
@@ -72,17 +76,17 @@ class GuiFrame(tk.Frame):
         Callback used to get the hotkey pressed by the user.
         """
 
-        hotkeys = self.parent.get_hotkeys()
-        hotkeys[self.__monitorsCombo.current()] = \
+        hotkeys = self.master.get_hotkeys()
+        hotkeys[self.__monitors_combo.current()] = \
             keyboard.read_hotkey(suppress=False).split("+")
-        self.parent.set_hotkeys(hotkeys)
-        txt = self._hotkey_text(hotkeys[self.__monitorsCombo.current()])
+        self.master.set_hotkeys(hotkeys)
+        txt = self._hk_txt(hotkeys[self.__monitors_combo.current()])
         self.__label.config(text=txt)
 
     def restart(self):
         """
         Resets the frame.
         """
-        hotkeys = self.parent.get_hotkeys()
-        self.__monitorsCombo.current(0)
-        self.__label.config(text=self._hotkey_text(hotkeys[0]))
+        hotkeys = self.master.get_hotkeys()
+        self.__monitors_combo.current(0)
+        self.__label.config(text=self._hk_txt(hotkeys[0]))

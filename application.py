@@ -1,16 +1,12 @@
-#!/usr/bin/env python3
-
-import os
-import sys
+import copy
 import tkinter as tk
-import apputils
-import frame
 import keyboard
 import mouse
-import copy
+import apputils
+import frame
 
 
-class Application:
+class Application(tk.Tk):
     """
     A class used to represent an hotkeys management application.
 
@@ -20,19 +16,17 @@ class Application:
     ----------
     _hotkeys: list of tuples
         the hotkeys used by the application
-    _root: tkinter.Tk
-        the base of the GUI
     _frame: tkinter.Frame
         the gui showed by the application
     """
 
-    def __init__(self, parent):
+    def __init__(self):
+        super().__init__()
         self._hotkeys = apputils.read_hotkeys()
-        self._root = parent
-        self._root.title('MouseMove')
-        self._frame = frame.GuiFrame(self, parent)
+        self.title('MouseMove')
+        self._frame = frame.GuiFrame(self)
         self._frame.grid(padx=5, pady=5)
-        self._root.withdraw()
+        self.withdraw()
         self._init_hotkeys()
 
     def _init_hotkeys(self):
@@ -49,7 +43,7 @@ class Application:
         keyboard.add_hotkey(
             '+'.join(i for i in self._hotkeys[-2]), self.show)
         keyboard.add_hotkey(
-            '+'.join(i for i in self._hotkeys[-1]), self._root.destroy)
+            '+'.join(i for i in self._hotkeys[-1]), self.destroy)
 
     def show(self):
         """
@@ -58,8 +52,8 @@ class Application:
 
         keyboard.unhook_all_hotkeys()
         self._frame.restart()
-        self._root.deiconify()
-        self._root.update()
+        self.deiconify()
+        self.update()
 
     def _restart(self):
         """
@@ -68,7 +62,7 @@ class Application:
 
         self._hotkeys = apputils.read_hotkeys()
         self._init_hotkeys()
-        self._root.withdraw()
+        self.withdraw()
 
     def save(self):
         """
@@ -94,15 +88,3 @@ class Application:
             self._hotkeys = hotkeys
         else:
             raise ValueError
-
-
-if os.path.sep == '/' and os.geteuid() != 0:
-    sys.exit(
-        """
-        You need to have root privileges to run this script.
-        Please try again, this time using 'sudo'. Exiting.
-        """
-    )
-root = tk.Tk()
-Application(root)
-root.mainloop()
