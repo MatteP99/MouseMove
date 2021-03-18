@@ -2,8 +2,7 @@ import copy
 import tkinter as tk
 import keyboard
 import mouse
-import apputils
-import frame
+from mousemove import apputils, frame
 
 
 class Application(tk.Tk):
