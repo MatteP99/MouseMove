@@ -13,4 +13,7 @@ if os.path.sep == '/' and os.geteuid() != 0:
     )
 
 app = application.Application()
+app.lift()
+app.attributes('-topmost', True)
+app.after_idle(app.attributes, '-topmost', False)
 app.mainloop()

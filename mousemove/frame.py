@@ -82,6 +82,7 @@ class GuiFrame(tk.Frame):
         lbl.pack(padx=5, pady=5)
 
         self.master.withdraw()
+        pop_up.lift()
         self.master.update()
 
         hotkeys = self.master.get_hotkeys()
