@@ -34,12 +34,12 @@ class GuiFrame(tk.Frame):
         self._start_widgets()
 
     @staticmethod
-    def _hk_txt(hotkey_text):
+    def _hk_txt(hotkey):
         """
         Returns the processed text for the hotkey to be displayed
         """
 
-        return keyboard.normalize_name('+'.join(i for i in hotkey_text))
+        return keyboard.normalize_name(keyboard.get_hotkey_name(hotkey))
 
     def _start_widgets(self):
         """

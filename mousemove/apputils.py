@@ -20,11 +20,11 @@ def read_hotkeys():
         if not os.path.exists('res'):
             os.mkdir('res')
         hotkeys = [
-            ('alt', 'shift', f'{n}')
+            ['alt', 'shift', f'{n}']
             for n, _ in enumerate(screeninfo.get_monitors(), 1)
         ]
-        hotkeys.append(('alt', 'shift', 's'))
-        hotkeys.append(('alt', 'shift', 'e'))
+        hotkeys.append(['alt', 'shift', 's'])
+        hotkeys.append(['alt', 'shift', 'e'])
         return hotkeys
 
 

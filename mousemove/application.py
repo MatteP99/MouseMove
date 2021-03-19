@@ -1,6 +1,6 @@
 import copy
 import tkinter as tk
-import keyboard
+import keyboard as kb
 import mouse
 from mousemove import apputils, frame
 
@@ -37,12 +37,10 @@ class Application(tk.Tk):
             hotkey = '+'.join(i for i in self._hotkeys[n])
             x = monitor[2] / 2 + monitor[0]
             y = monitor[3] / 2 + monitor[1]
-            keyboard.add_hotkey(hotkey, mouse.move, args=(x, y))
+            kb.add_hotkey(hotkey, mouse.move, args=(x, y))
 
-        keyboard.add_hotkey(
-            '+'.join(i for i in self._hotkeys[-2]), self.show)
-        keyboard.add_hotkey(
-            '+'.join(i for i in self._hotkeys[-1]), self.destroy)
+        kb.add_hotkey(kb.get_hotkey_name(self._hotkeys[-2]), self.show)
+        kb.add_hotkey(kb.get_hotkey_name(self._hotkeys[-1]), self.destroy)
 
     def show(self, unhook=True):
         """
@@ -50,7 +48,7 @@ class Application(tk.Tk):
         """
 
         if unhook:
-            keyboard.unhook_all_hotkeys()
+            kb.unhook_all_hotkeys()
         self._frame.restart()
         self.deiconify()
         self.update()
@@ -77,7 +75,8 @@ class Application(tk.Tk):
         Sets the hotkeys.
         """
 
-        if isinstance(hotkeys, list):
+        if isinstance(hotkeys, list) and \
+                all((isinstance(hotkey, list) for hotkey in hotkeys)):
             self._hotkeys = hotkeys
         else:
             raise ValueError
