@@ -44,32 +44,26 @@ class Application(tk.Tk):
         keyboard.add_hotkey(
             '+'.join(i for i in self._hotkeys[-1]), self.destroy)
 
-    def show(self):
+    def show(self, unhook=True):
         """
-        Removes all the hotkeys and shows the configuration window.
+        Removes all the hotkeys (by default) and shows the configuration window.
         """
 
-        keyboard.unhook_all_hotkeys()
+        if unhook:
+            keyboard.unhook_all_hotkeys()
         self._frame.restart()
         self.deiconify()
         self.update()
 
-    def _restart(self):
+    def save_and_restart(self):
         """
-        Hides the configuration window and re-initialize the hotkeys.
-        """
-
-        self._hotkeys = apputils.read_hotkeys()
-        self._init_hotkeys()
-        self.withdraw()
-
-    def save(self):
-        """
-        Save the hotkeys configuration in a csv file.
+        Save the hotkeys configuration and restart the program.
         """
 
         apputils.write_hotkeys(self._hotkeys)
-        self._restart()
+        self._hotkeys = apputils.read_hotkeys()
+        self._init_hotkeys()
+        self.withdraw()
 
     def get_hotkeys(self):
         """

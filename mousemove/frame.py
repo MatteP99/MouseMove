@@ -30,7 +30,7 @@ class GuiFrame(tk.Frame):
         self.__read_hotkey_button = tk.Button(
             self, text='Register hotkey', command=self._read_hotkey)
         self.__save_button = tk.Button(
-            self, text='Save and quit', command=self.master.save)
+            self, text='Save and quit', command=self.master.save_and_restart)
         self._start_widgets()
 
     @staticmethod
@@ -62,7 +62,7 @@ class GuiFrame(tk.Frame):
         self.__read_hotkey_button.grid(row=0, column=2, padx=5, pady=5, )
         self.__save_button.grid(row=1, column=0, padx=5, pady=5, columnspan=3)
 
-    def _callback(self, args):
+    def _callback(self, _):
         """
         The callback used to track the changes to the combobox.
         """
