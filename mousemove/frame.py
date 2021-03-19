@@ -76,16 +76,24 @@ class GuiFrame(tk.Frame):
         Callback used to get the hotkey pressed by the user.
         """
 
-        # Needed to disable the window
-        self.grid_forget()
+        pop_up = tk.Toplevel()
+        lbl = tk.Label(
+            pop_up, text="Please insert an hotkey!", font=("Helvetica", 14))
+        lbl.pack(padx=5, pady=5)
+
+        self.master.withdraw()
+        self.master.update()
+
         hotkeys = self.master.get_hotkeys()
         hotkeys[self.__monitors_combo.current()] = \
             keyboard.read_hotkey(suppress=False).split("+")
         self.master.set_hotkeys(hotkeys)
+
         txt = self._hk_txt(hotkeys[self.__monitors_combo.current()])
         self.__label.config(text=txt)
-        # Re-enable the window
-        self.grid()
+
+        pop_up.destroy()
+        self.master.show(False)
 
     def restart(self):
         """

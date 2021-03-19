@@ -49,7 +49,7 @@ class Application(tk.Tk):
 
         if unhook:
             kb.unhook_all_hotkeys()
-        self._frame.restart()
+            self._frame.restart()
         self.deiconify()
         self.update()
 
